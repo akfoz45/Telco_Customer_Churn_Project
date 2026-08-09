@@ -6,7 +6,7 @@ class Customer(models.Model):
     partner = models.CharField(max_length=10, verbose_name="Does he/she have a partner?")
     dependents = models.CharField(max_length=10, verbose_name="Person Responsible for Caring")
     tenure = models.IntegerField(verbose_name="Customer Duration (Months)")
-    phone_service = models.CharField(max_length="10", verbose_name="Phone Service")
+    phone_service = models.CharField(max_length=10, verbose_name="Phone Service")
     multiple_lines = models.CharField(max_length=10, verbose_name="Multiple Lines")
     internet_service = models.CharField(max_length=30, verbose_name="Internet Service")
     online_security = models.CharField(max_length=10, verbose_name="Online Security")
