@@ -1,1 +1,87 @@
-.ipynb_checkpoints
+# =========================
+# Python
+# =========================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# =========================
+# Django
+# =========================
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Django local database
+db.sqlite3
+db.sqlite3-journal
+
+# Django collected static/media files
+staticfiles/
+media/
+
+# Logs
+*.log
+
+# =========================
+# Jupyter Notebook
+# =========================
+
+.ipynb_checkpoints/
+
+# Jupyter temporary files
+*.ipynb_checkpoints
+
+# =========================
+# VS Code
+# =========================
+
+.vscode/
+
+# =========================
+# Testing / Coverage
+# =========================
+
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# =========================
+# Build / Distribution
+# =========================
+
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# =========================
+# OS
+# =========================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# =========================
+# Python tools
+# =========================
+
+.mypy_cache/
+.ruff_cache/
+.pyre/
