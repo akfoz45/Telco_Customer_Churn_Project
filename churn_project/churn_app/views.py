@@ -74,3 +74,22 @@ def predict_churn(request):
 def dashboard(request):
     customers = Customer.objects.all().order_by("-id")[:50]
     return render(request, 'churn_app/dashboard.html', {'customers': customers})
+
+@csrf_exempt
+def apply_campaign(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            customer_id = data.get("customer_id")
+
+            prediction = ChurnPrediction.objects.get(customer__id=customer_id)
+            prediction.action_taken = True
+            prediction.save()
+
+            return JsonResponse({'status': 'success', 'message': 'The campaign has been successfully completed!'})
+        except ChurnPrediction.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Customer estimate not found."})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "Only POST is supported."}, statuse=405)
