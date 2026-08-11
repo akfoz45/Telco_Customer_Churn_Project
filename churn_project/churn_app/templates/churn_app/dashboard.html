@@ -61,6 +61,7 @@
             margin-bottom: 0.75rem;
         }
 
+        /* Select Input (Açılır Menü) Tasarımı */
         .form-select {
             background-color: rgba(15, 23, 42, 0.6);
             color: #f8fafc;
@@ -76,6 +77,18 @@
             color: #fff;
             border-color: #8b5cf6;
             box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+        }
+
+        /* YENİ EKLENEN KISIM: Açılır Menü İçindeki Seçeneklerin (Options) Tasarımı */
+        .form-select option {
+            background-color: #0f172a; /* Temaya uygun koyu lacivert arka plan */
+            color: #f8fafc;            /* Açık renk yazı */
+            padding: 12px;
+        }
+
+        /* İlk baştaki placeholder (disabled) seçeneğin rengini hafif soluk yapma */
+        .form-select option:disabled {
+            color: #64748b;
         }
 
         .btn-primary {
@@ -165,6 +178,7 @@
                                 <select class="form-select form-select-lg shadow-sm" id="customerSelect" required>
                                     <option value="" selected disabled>Please select a customer from the list...</option>
                                     <option value="NEW">🎯 New Test Customer (Sample Data)</option>
+                                    <!-- Jinja Template loop for customers -->
                                     {% for customer in customers %}
                                         <option value="{{ customer.id }}">{{ customer }}</option>
                                     {% endfor %}

@@ -85,3 +85,6 @@ Desktop.ini
 .mypy_cache/
 .ruff_cache/
 .pyre/
+
+
+churn_project/add_samples.py
