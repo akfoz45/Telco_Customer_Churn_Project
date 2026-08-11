@@ -4,61 +4,195 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intelligent Customer Churn (Churn) Panel</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
         .dashboard-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding-top: 2rem;
+            padding: 3rem 1rem;
+            width: 100%;
         }
-        .customer-card {
-            margin-bottom: 1rem;
+
+        .card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
         }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: transparent !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.5rem !important;
+            border-radius: 20px 20px 0 0 !important;
+        }
+
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        .form-label {
+            color: #cbd5e1;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-select {
+            background-color: rgba(15, 23, 42, 0.6);
+            color: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            transition: all 0.3s ease;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23cbd5e1' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        }
+
+        .form-select:focus {
+            background-color: rgba(15, 23, 42, 0.9);
+            color: #fff;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        /* Başlık Efekti */
+        .page-title {
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
         .info-panel {
-            border-right: 1px solid #eee;
+            border-right: none;
         }
-        .visual-panel {
-            text-align: center;
+        
+        #waitingText {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: #475569;
+        }
+        
+        #riskScore {
+            transition: color 0.3s ease;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
     <div class="dashboard-container">
-        <h2 class="mb-4">Customer Churn Analysis and Recovery Panel</h2>
+        <h2 class="mb-5 text-center fw-bold page-title">
+            <i class="bi bi-graph-up-arrow me-2"></i>Customer Churn Analysis and Recovery Panel
+        </h2>
 
-        <div class="row">
+        <div class="row g-4 mt-2">
             <div class="col-md-5 info-panel">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Customer Selection</h5>
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-25 p-2 rounded-circle me-3">
+                            <i class="bi bi-person-badge text-primary fs-5"></i>
+                        </div>
+                        <h5 class="mb-0 fw-semibold text-white">Customer Selection</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4 d-flex flex-column justify-content-center">
                         <form id="predictionForm">
-                            <div class="mb-3">
-                                <label for="customerSelect" class="form-label">Select the customer to be analyzed:</label>
-                                <select class="form-select" id="customerSelect" required>
-                                    <option value="" selected disabled>Müşteri seçiniz...</option>
-                                    <option value="NEW">-- New Test Customer (Sample Data) --</option>
+                            <div class="mb-4">
+                                <label for="customerSelect" class="form-label">Select the customer to be analyzed.</label>
+                                <select class="form-select form-select-lg shadow-sm" id="customerSelect" required>
+                                    <option value="" selected disabled>Please select a customer from the list...</option>
+                                    <option value="NEW">🎯 New Test Customer (Sample Data)</option>
                                     {% for customer in customers %}
                                         <option value="{{ customer.id }}">{{ customer }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Risk Analizi Yap</button>
+                            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold mt-2">
+                                <i class="bi bi-cpu me-2"></i>Analyze with Artificial Intelligence
+                            </button>
                         </form>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-7 visual-panel">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body d-flex flex-column justify-content-center align-items-center" id="resultPanel">
-                        <h5 class="text-muted">The analysis results will be displayed here...</h5>
-                        <div id="gaugeChartContainer" class="w-100 mt-3" style="height: 250px;"></div>
-                        <h3 id="riskScore" class="mt-3"></h3>
-                        <p id="actionMessage" class="lead"></p>
-                        <div id="actionButtonContainer"></div>
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center p-5" id="resultPanel">
+                        
+                        <div id="waitingText" class="text-muted">
+                            <i class="bi bi-pie-chart empty-icon"></i>
+                            <h5 class="fw-light">The analysis results will be displayed here...</h5>
+                            <p class="small text-secondary">Select a customer from the left side and start the analysis.</p>
+                        </div>
+                        
+                        <div id="gaugeChartContainer" class="w-100" style="height: 280px; display: none;"></div>
+                        
+                        <h2 id="riskScore" class="mt-4 fw-bold"></h2>
+                        <p id="actionMessage" class="lead mt-2 mb-4 text-center"></p>
+                        <div id="actionButtonContainer" class="w-100 px-md-5"></div>
                     </div>
                 </div>
             </div>
@@ -78,13 +212,16 @@
             const customerId = document.getElementById('customerSelect').value;
             if (!customerId) return;
 
+            document.getElementById('waitingText').style.display = 'none';
+            document.getElementById('gaugeChartContainer').style.display = 'block';
+
             const payload = {
                 "id": customerId === "NEW" ? 9999 : parseInt(customerId),
                 "gender": "Female",
                 "SeniorCitizen": 0,
                 "Partner": "No",
                 "Dependents": "No",
-                "tenure": 1,                     
+                "tenure": 1,
                 "PhoneService": "Yes",
                 "MultipleLines": "No",
                 "InternetService": "Fiber optic",
@@ -94,10 +231,10 @@
                 "TechSupport": "No",
                 "StreamingTV": "Yes",
                 "StreamingMovies": "Yes",
-                "Contract": "Month-to-month",    
+                "Contract": "Month-to-month",
                 "PaperlessBilling": "Yes",
                 "PaymentMethod": "Electronic check",
-                "MonthlyCharges": 105.50,        
+                "MonthlyCharges": 105.50,
                 "TotalCharges": 105.50
             };
 
@@ -111,13 +248,16 @@
                 if(data.status === 'success') {
                     const riskScoreEl = document.getElementById('riskScore');
                     riskScoreEl.innerText = `Risk Oranı: %${data.churn_probability}`;
-                    riskScoreEl.className = data.is_high_risk ? "mt-3 text-danger fw-bold" : "mt-3 text-success";
                     
-                    document.getElementById('actionMessage').innerText = data.message;
+                    riskScoreEl.className = data.is_high_risk ? "mt-4 text-danger fw-bold" : "mt-4 text-success fw-bold";
+                    
+                    const msgEl = document.getElementById('actionMessage');
+                    msgEl.innerText = data.message;
+                    msgEl.style.color = "#cbd5e1"; 
 
                     const btnContainer = document.getElementById('actionButtonContainer');
                     if(data.is_high_risk) {
-                        btnContainer.innerHTML = `<button id="smsButton" class="btn btn-danger btn-lg mt-2 w-100" data-id="${data.customer_id}">SMS ile %15 Yenileme İndirimi Tanımla</button>`;
+                        btnContainer.innerHTML = `<button id="smsButton" class="btn btn-danger btn-lg w-100 fw-bold shadow-lg" data-id="${data.customer_id}"><i class="bi bi-envelope-paper me-2"></i> SMS ile %15 Yenileme İndirimi Tanımla</button>`;
                     } else {
                         btnContainer.innerHTML = ''; 
                     }
@@ -131,9 +271,14 @@
         });
 
         document.getElementById('actionButtonContainer').addEventListener('click', function(e) {
-            if(e.target && e.target.id === 'smsButton') {
-                const customerId = e.target.getAttribute('data-id');
+            const btn = e.target.closest('#smsButton');
+            if(btn) {
+                const customerId = btn.getAttribute('data-id');
                 
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Processing...`;
+                btn.disabled = true;
+
                 fetch('/api/apply-campaign/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -142,10 +287,18 @@
                 .then(res => res.json())
                 .then(data => {
                     if(data.status === 'success') {
-                        e.target.innerText = 'The campaign was successfully implemented!';
-                        e.target.className = 'btn btn-success btn-lg mt-2 w-100';
-                        e.target.disabled = true; 
+                        btn.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> The campaign was successfully implemented!';
+                        btn.className = 'btn btn-success btn-lg w-100 fw-bold shadow-lg';
+                    } else {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        alert("The operation failed.");
                     }
+                })
+                .catch(err => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    console.error('Hata:', err);
                 });
             }
         });
@@ -157,7 +310,8 @@
             const canvas = document.getElementById('riskCanvas');
 
             const remainProb = 100 - probability;
-            const color = probability >= 70 ? '#dc3545' : '#198754'; 
+            const color = probability >= 70 ? '#ef4444' : '#10b981'; 
+            const bgColor = 'rgba(255, 255, 255, 0.05)'; 
 
             riskChart = new Chart(canvas, {
                 type: 'doughnut',
@@ -165,8 +319,10 @@
                     labels: ['Risk', 'Safe'],
                     datasets: [{
                         data: [probability, remainProb],
-                        backgroundColor: [color, '#e9ecef'],
-                        borderWidth: 0
+                        backgroundColor: [color, bgColor],
+                        borderWidth: 0,
+                        hoverOffset: 4,
+                        borderRadius: 5 
                     }]
                 },
                 options: {
@@ -174,8 +330,24 @@
                     maintainAspectRatio: false,
                     circumference: 180, 
                     rotation: 270,      
-                    cutout: '80%',      
-                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                    cutout: '80%', 
+                    plugins: { 
+                        legend: { display: false }, 
+                        tooltip: { 
+                            enabled: true,
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleFont: { family: 'Inter' },
+                            bodyFont: { family: 'Inter' },
+                            padding: 10,
+                            cornerRadius: 8
+                        } 
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true,
+                        duration: 1500,
+                        easing: 'easeInOutQuart'
+                    }
                 }
             });
         }
