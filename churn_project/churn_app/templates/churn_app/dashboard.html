@@ -61,7 +61,6 @@
             margin-bottom: 0.75rem;
         }
 
-        /* Select Input (Açılır Menü) Tasarımı */
         .form-select {
             background-color: rgba(15, 23, 42, 0.6);
             color: #f8fafc;
@@ -79,14 +78,12 @@
             box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
         }
 
-        /* YENİ EKLENEN KISIM: Açılır Menü İçindeki Seçeneklerin (Options) Tasarımı */
         .form-select option {
-            background-color: #0f172a; /* Temaya uygun koyu lacivert arka plan */
-            color: #f8fafc;            /* Açık renk yazı */
+            background-color: #0f172a;
+            color: #f8fafc;            
             padding: 12px;
         }
 
-        /* İlk baştaki placeholder (disabled) seçeneğin rengini hafif soluk yapma */
         .form-select option:disabled {
             color: #64748b;
         }
@@ -126,7 +123,6 @@
             padding: 1rem;
         }
 
-        /* Başlık Efekti */
         .page-title {
             background: linear-gradient(to right, #fff, #94a3b8);
             -webkit-background-clip: text;
@@ -153,6 +149,11 @@
         #riskScore {
             transition: color 0.3s ease;
         }
+
+        .dropdown-item:hover, .dropdown-item:focus {
+            background-color: rgba(139, 92, 246, 0.4) !important;
+            color: #fff !important;
+        }
     </style>
 </head>
 <body>
@@ -173,17 +174,27 @@
                     </div>
                     <div class="card-body p-4 d-flex flex-column justify-content-center">
                         <form id="predictionForm">
-                            <div class="mb-4">
-                                <label for="customerSelect" class="form-label">Select the customer to be analyzed.</label>
-                                <select class="form-select form-select-lg shadow-sm" id="customerSelect" required>
-                                    <option value="" selected disabled>Please select a customer from the list...</option>
-                                    <option value="NEW">🎯 New Test Customer (Sample Data)</option>
-                                    <!-- Jinja Template loop for customers -->
+                            <div class="mb-4 position-relative">
+                                <label class="form-label">Select the customer to be analyzed.</label>
+                                
+                                <select id="customerSelect" required style="display:none;">
+                                    <option value="" selected disabled></option>
                                     {% for customer in customers %}
                                         <option value="{{ customer.id }}">{{ customer }}</option>
                                     {% endfor %}
                                 </select>
+
+                                <button class="form-select text-start" type="button" id="customSelectBtn" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: rgba(15, 23, 42, 0.6); color: #f8fafc;">
+                                    Please select a customer from the list...
+                                </button>
+                                
+                                <ul class="dropdown-menu w-100" aria-labelledby="customSelectBtn" style="background-color: #0f172a; border: 1px solid rgba(255,255,255,0.1); max-height: 300px; overflow-y: auto;">
+                                    {% for customer in customers %}
+                                        <li><a class="dropdown-item text-white select-item" href="#" data-value="{{ customer.id }}">{{ customer }}</a></li>
+                                    {% endfor %}
+                                </ul>
                             </div>
+
                             <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold mt-2">
                                 <i class="bi bi-cpu me-2"></i>Analyze with Artificial Intelligence
                             </button>
@@ -220,6 +231,17 @@
     <script>
         let riskChart = null; 
 
+        document.querySelectorAll('.select-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const selectedValue = this.getAttribute('data-value');
+                const selectedText = this.innerText;
+                
+                document.getElementById('customerSelect').value = selectedValue;
+                document.getElementById('customSelectBtn').innerText = selectedText;
+            });
+        });
+
         document.getElementById('predictionForm').addEventListener('submit', function(e) {
             e.preventDefault(); 
             
@@ -230,26 +252,7 @@
             document.getElementById('gaugeChartContainer').style.display = 'block';
 
             const payload = {
-                "id": customerId === "NEW" ? 9999 : parseInt(customerId),
-                "gender": "Female",
-                "SeniorCitizen": 0,
-                "Partner": "No",
-                "Dependents": "No",
-                "tenure": 1,
-                "PhoneService": "Yes",
-                "MultipleLines": "No",
-                "InternetService": "Fiber optic",
-                "OnlineSecurity": "No",
-                "OnlineBackup": "No",
-                "DeviceProtection": "No",
-                "TechSupport": "No",
-                "StreamingTV": "Yes",
-                "StreamingMovies": "Yes",
-                "Contract": "Month-to-month",
-                "PaperlessBilling": "Yes",
-                "PaymentMethod": "Electronic check",
-                "MonthlyCharges": 105.50,
-                "TotalCharges": 105.50
+                "id": parseInt(customerId)
             };
 
             fetch('/api/predict/', {
@@ -261,7 +264,7 @@
             .then(data => {
                 if(data.status === 'success') {
                     const riskScoreEl = document.getElementById('riskScore');
-                    riskScoreEl.innerText = `Risk Oranı: %${data.churn_probability}`;
+                    riskScoreEl.innerText = `Risk Ratio: %${data.churn_probability}`;
                     
                     riskScoreEl.className = data.is_high_risk ? "mt-4 text-danger fw-bold" : "mt-4 text-success fw-bold";
                     

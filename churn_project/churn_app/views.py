@@ -11,43 +11,42 @@ def predict_churn(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            customer_id = data.get("id")
+
+            customer = Customer.objects.get(id=customer_id)
+
+            model_data = {
+                "gender": customer.gender,
+                "SeniorCitizen": customer.senior_citizen,
+                "Partner": customer.partner,
+                "Dependents": customer.dependents,
+                "tenure": customer.tenure,
+                "PhoneService": customer.phone_service,
+                "MultipleLines": customer.multiple_lines,
+                "InternetService": customer.internet_service,
+                "OnlineSecurity": customer.online_security,
+                "OnlineBackup": customer.online_backup,
+                "DeviceProtection": customer.device_protection,
+                "TechSupport": customer.tech_support,
+                "StreamingTV": customer.streaming_tv,
+                "StreamingMovies": customer.streaming_movie, 
+                "Contract": customer.contract,
+                "PaperlessBilling": customer.paperless_billing,
+                "PaymentMethod": customer.payment_method,
+                "MonthlyCharges": customer.monthly_charges,
+                "TotalCharges": customer.total_charges
+            }
 
             ml_model = apps.get_app_config("churn_app").ml_model
-
             if ml_model is None:
                 return JsonResponse({'error': 'No machine learning model was found.'}, status=500)
 
-            df = pd.DataFrame([data])
+            df = pd.DataFrame([model_data])
 
             churn_prob = ml_model.predict_proba(df)[0][1]
             churn_prob_percentage = float(round(churn_prob * 100, 2))
 
             is_high_risk = bool(churn_prob_percentage >= 70.0)
-
-            customer, created = Customer.objects.update_or_create(
-                id=data.get("id",None),
-                defaults={
-                    'gender': data.get('gender', ''),
-                    'senior_citizen': int(data.get('SeniorCitizen', 0)),
-                    'partner': data.get('Partner', ''),
-                    'dependents': data.get('Dependents', ''),
-                    'tenure': int(data.get('tenure', 0)),
-                    'phone_service': data.get('PhoneService', ''),
-                    'multiple_lines': data.get('MultipleLines', ''),
-                    'internet_service': data.get('InternetService', ''),
-                    'online_security': data.get('OnlineSecurity', ''),
-                    'online_backup': data.get('OnlineBackup', ''),
-                    'device_protection': data.get('DeviceProtection', ''),
-                    'tech_support': data.get('TechSupport', ''),
-                    'streaming_tv': data.get('StreamingTV', ''),
-                    'streaming_movie': data.get('StreamingMovies', ''),
-                    'contract': data.get('Contract', ''),
-                    'paperless_billing': data.get('PaperlessBilling', ''),
-                    'payment_method': data.get('PaymentMethod', ''),
-                    'monthly_charges': float(data.get('MonthlyCharges', 0.0)),
-                    'total_charges': float(data.get('TotalCharges', 0.0)),
-                }
-            )
 
             ChurnPrediction.objects.update_or_create(
                 customer=customer,
